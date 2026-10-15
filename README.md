@@ -110,9 +110,3 @@ Checks cover every required layer's output shape, parameter count, gradient prop
 | `INTEGRATION.md` | Existing-API and GitHub instructions |
 | `Assignment2_Theory_LiuyangLi.pdf` | English worked answers to Questions 1-6 |
 | `THEORY_ANSWERS.md` | Editable source of the worked answers |
-
-## Submission
-
-The assignment rubric also requires a GitHub commit and a Docker deployment that works on the instructor's computer. Merge the CNN router into the existing course project, commit the code **and the trained checkpoint**, and include the repository link with your submission. Upload the theory PDF, or this project package if that is the required submission format. Code files alone do not establish that a GitHub commit or Docker run has happened.
-
-References: the supplied Assignment2.pdf; https://www.cs.toronto.edu/~kriz/cifar.html; https://docs.pytorch.org/docs/stable/notes/modules.html; https://docs.pytorch.org/docs/stable/notes/autograd.html; https://pytorch.org/get-started/previous-versions/.
