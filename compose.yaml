@@ -3,6 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: sps-genai-assignment1:latest
+    image: sps-genai-assignment2:latest
     ports:
       - "8000:80"

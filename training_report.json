@@ -1,0 +1,192 @@
+{
+  "architecture": "assignment2_cnn_64_v1",
+  "image_size": 64,
+  "parameter_count": 825398,
+  "classes": [
+    "airplane",
+    "automobile",
+    "bird",
+    "cat",
+    "deer",
+    "dog",
+    "frog",
+    "horse",
+    "ship",
+    "truck"
+  ],
+  "seed": 617,
+  "train_count": 45000,
+  "validation_count": 5000,
+  "test_count": 10000,
+  "epochs": 10,
+  "selected_epoch": 8,
+  "batch_size": 128,
+  "initial_learning_rate": 0.001,
+  "optimizer": "Adam",
+  "loss": "CrossEntropyLoss",
+  "augmentation": "RandomHorizontalFlip(p=0.5) on training images only",
+  "normalization": {
+    "mean": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "std": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  },
+  "validation_accuracy": 0.6948,
+  "test_accuracy": 0.685,
+  "test_loss": 0.8976194576263428,
+  "confusion_matrix_rows_true_columns_predicted": [
+    [
+      760,
+      21,
+      37,
+      18,
+      18,
+      10,
+      13,
+      5,
+      72,
+      46
+    ],
+    [
+      22,
+      785,
+      9,
+      12,
+      2,
+      6,
+      5,
+      4,
+      38,
+      117
+    ],
+    [
+      89,
+      7,
+      523,
+      69,
+      96,
+      75,
+      69,
+      41,
+      17,
+      14
+    ],
+    [
+      22,
+      13,
+      75,
+      498,
+      75,
+      170,
+      70,
+      28,
+      29,
+      20
+    ],
+    [
+      29,
+      6,
+      89,
+      83,
+      600,
+      37,
+      73,
+      62,
+      16,
+      5
+    ],
+    [
+      15,
+      6,
+      67,
+      182,
+      46,
+      602,
+      21,
+      38,
+      16,
+      7
+    ],
+    [
+      11,
+      7,
+      50,
+      58,
+      45,
+      28,
+      777,
+      4,
+      10,
+      10
+    ],
+    [
+      19,
+      4,
+      31,
+      37,
+      72,
+      72,
+      12,
+      727,
+      6,
+      20
+    ],
+    [
+      80,
+      43,
+      4,
+      13,
+      6,
+      7,
+      6,
+      3,
+      809,
+      29
+    ],
+    [
+      29,
+      100,
+      10,
+      14,
+      5,
+      10,
+      5,
+      15,
+      43,
+      769
+    ]
+  ],
+  "device": "cpu",
+  "threads": 4,
+  "workers": 0,
+  "torch_version": "2.5.1+cpu",
+  "torchvision_version": "0.20.1+cpu",
+  "elapsed_training_and_evaluation_seconds": 368.5818530259994,
+  "selection_rule": "Highest validation accuracy; test evaluated only after selection",
+  "data_source": {
+    "loader": "PreparedCIFAR10",
+    "repository": "uoft-cs/cifar10",
+    "revision": "0b2714987fa478483af9968de7c934580d0bb9a2",
+    "splits": {
+      "train": {
+        "file": "plain_text/train-00000-of-00001.parquet",
+        "sha256": "8428b53a88a11ac374111006708df51469e315a22ac6d66470afd9c78d2ae883",
+        "rows": 50000
+      },
+      "test": {
+        "file": "plain_text/test-00000-of-00001.parquet",
+        "sha256": "841389e6f2d64f28bf17310e430aebac20ec3ba611a3c5e231dc93c645ce84de",
+        "rows": 10000
+      }
+    },
+    "dataset_card": "https://huggingface.co/datasets/uoft-cs/cifar10",
+    "original_homepage": "https://www.cs.toronto.edu/~kriz/cifar.html",
+    "preparation": "Lossless PNG decoded to original 32x32 RGB arrays; official train/test splits preserved"
+  }
+}

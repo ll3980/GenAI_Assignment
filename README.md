@@ -1,119 +1,118 @@
-# Assignment 1: Text Generation and Word Embedding API
+# Assignment 2: Convolutional Neural Networks
 
-**Student: Liuyang Li**  
-**UNI: ll3980**
+This project extends the previous Assignment 1 course API, implements the exact CNN architecture in the assignment, trains it on CIFAR-10, and exposes image classification through FastAPI. The package includes a trained checkpoint, the training script, actual evaluation results, Docker configuration, example images, and worked answers to all six theory questions.
 
-This project adds the spaCy word embedding operation from Module 2 to the FastAPI text generation application from Module 3. The original `POST /generate` endpoint remains available. The new `POST /embedding` endpoint accepts one query word and returns its complete pretrained vector; `GET /embedding?word=apple` supports the same operation through a query parameter. The project includes a Docker deployment, locked dependencies, API tests, and a GitHub Actions workflow that builds and queries the container.
+The original `GET /`, `POST /generate`, and both `GET /embedding` and `POST /embedding` routes are retained. `app/main.py` already attaches the new CNN router. Use this merged project in your existing GitHub repository; **INTEGRATION.md** also explains how to add only the CNN module if needed.
 
-## Docker deployment
+The included CNN was trained for **10 epochs**. Validation selected **epoch 8** (69.48% validation accuracy); the selected model achieved **68.50% test accuracy**, or **6,850 correct predictions out of 10,000**. The actual history, confusion matrix, and API check results are in `results/`. All **26 tests** and the live Uvicorn HTTP checks passed in the locked dependency environment.
 
-On Windows or macOS, install and start Docker Desktop with Linux containers. On Linux, use Docker Engine with Docker Compose v2. Run all commands from the project directory containing `Dockerfile`, `compose.yaml`, and `pyproject.toml`.
+## Run with Docker
 
-```bash
-docker compose up --build --detach --wait --wait-timeout 180
-```
-
-The first build needs an Internet connection to install dependencies and the official `en_core_web_lg` 3.8.0 model. The model wheel is approximately 401 MB. The model is installed inside the image, and the build checks that it can return a 300-dimensional vector. API inference uses the CPU and requires no GPU, API key, or paid service. The installed model is reused across requests.
-
-The container listens on port 80, mapped to port 8000 on the host. Open <http://127.0.0.1:8000/docs> to query the API. The first embedding request loads the model into memory and may take longer than later requests.
-
-Verify the running container using its installed Python interpreter:
+From this project directory, with Docker running:
 
 ```bash
-docker compose exec -T api python scripts/check_api.py --base-url http://127.0.0.1:80
+docker build -t sps-cnn-assignment2 .
+docker run --rm -p 8000:80 sps-cnn-assignment2
 ```
 
-A successful verification ends with `All API checks passed.` The script checks the running HTTP server, Swagger UI, endpoint schema, the complete vector, GET/POST agreement, input errors, and the original text generator. To check the host port instead, run `python scripts/check_api.py --base-url http://127.0.0.1:8000` on a host with Python installed.
+Open http://127.0.0.1:8000/docs. Expand `POST /predict`, click **Try it out**, choose an image from `examples/`, and click **Execute**. The response includes `class_name`, `class_id`, `confidence`, and the probability of each of the ten classes. No CIFAR-10 dataset download or CNN training is needed to serve the included checkpoint. The first build installs the same pretrained spaCy `en_core_web_lg` model used by the previous embedding endpoint.
 
-View logs or stop the deployment:
+Readiness: http://127.0.0.1:8000/cnn/health.
+
+To query all three model endpoints over HTTP, run in a second terminal:
 
 ```bash
-docker compose logs --tail 50 api
-docker compose down
+python scripts/check_api.py --base-url http://127.0.0.1:8000 --output results/docker_api_check.json
 ```
 
-If port 8000 is occupied, stop the existing development server before starting this deployment. A plain Docker alternative is also supported:
+This check uses only Python's standard library and writes evidence after all checks pass. `START_HERE_CN.md` gives the short Chinese run/submission steps.
+
+The container listens on port **80**; `-p 8000:80` maps it to port **8000** on your computer. On an ARM computer that cannot find the pinned CPU wheels, use `docker build --platform linux/amd64 -t sps-cnn-assignment2 .` and add `--platform linux/amd64` to `docker run`.
+
+## Run locally
+
+Use **Python 3.11 or 3.12** for the pinned PyTorch version. In Windows PowerShell, from this folder:
+
+```powershell
+py -3.12 -m venv .venv
+.venv\Scripts\python.exe -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cpu
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+On Linux/macOS, create an environment using `python3.12 -m venv .venv`. Use `.venv/bin/python` in place of `.venv\Scripts\python.exe`. On macOS, install the PyTorch pair without `--index-url`.
+
+## Query the API
+
+Using Windows PowerShell in a second terminal:
+
+```powershell
+curl.exe -X POST "http://127.0.0.1:8000/predict" -F "file=@examples/cat.png"
+```
+
+On Linux/macOS, use `curl` instead of `curl.exe`. The API accepts multipart field **file**. It converts readable images to RGB and applies the same deterministic resize and normalization used for validation and testing. The classifier's output space is the ten CIFAR-10 classes. `confidence` is the largest softmax probability.
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| POST | `/predict` | Upload an image and return its class |
+| GET | `/cnn/health` | Confirm that the trained checkpoint can load |
+| GET | `/cnn/classes` | List class names in model output order |
+| GET | `/docs` | Interactive API documentation |
+| POST | `/generate` | Existing bigram text generation |
+| GET/POST | `/embedding` | Existing full 300-dimensional spaCy word vector |
+
+## Train again
 
 ```bash
-docker build -t sps-genai-assignment1 .
-docker run --rm -p 8000:80 sps-genai-assignment1
+python train.py --epochs 10 --seed 617
 ```
 
-## API requests and responses
+The default loader downloads the official CIFAR-10 archive through torchvision. The original images are **32 x 32**, resized to **64 x 64** because the assignment explicitly specifies that model input. Training uses a random horizontal flip; validation, test, and inference use deterministic preprocessing. RGB values are converted to tensors and normalized with mean `(0.5, 0.5, 0.5)` and standard deviation `(0.5, 0.5, 0.5)`.
 
-| Method | Endpoint | Input | Result |
-| --- | --- | --- | --- |
-| GET | `/` | None | Server status: `{"Hello":"World"}` |
-| POST | `/embedding` | JSON: `{"word":"apple"}` | Complete spaCy word vector and model metadata |
-| GET | `/embedding` | Query: `?word=apple` | Same embedding response |
-| POST | `/generate` | JSON: `{"start_word":"the","length":20}` | `generated_text` from the classroom bigram model |
+The official training set is split reproducibly into **45,000 training** and **5,000 validation** images. The checkpoint is selected by the highest validation accuracy. The separate **10,000-image test set** is evaluated once after selection. The loss is CrossEntropyLoss, receiving raw logits; softmax is applied only when producing API probabilities. Each training epoch restores `model.train()` after validation has called `model.eval()`.
 
-### Word embedding
+If the original download is slow, an optional script prepares the University of Toronto's lossless CIFAR-10 mirror:
 
-In Swagger UI, expand **POST /embedding**, select **Try it out**, enter this JSON, and select **Execute**:
-
-```json
-{"word": "apple"}
+```bash
+python -m pip install pyarrow==19.0.1
+python scripts/prepare_cifar10_mirror.py --output-dir data/mirror
+python train.py --prepared-data data/mirror --epochs 10 --seed 617
 ```
 
-For a direct browser query, open <http://127.0.0.1:8000/embedding?word=apple>. Both methods return HTTP 200 and the following fields:
+This optional preparation preserves image pixels, labels, and the official training/test partitions. It records the repository revision and source-file SHA-256 digests. The training report states which source was used. PyArrow is required only for preparing this optional cache, not for inference or ordinary torchvision training. Dataset files are excluded from Git and Docker.
 
-| Field | Meaning |
+Outputs: `models/cifar10_cnn.pt`, `results/training_history.csv`, `results/training_report.json`, and one example test image per class in `examples/`. The seed helps reproduce data splits and sampling; exact floating-point results can differ across devices or software versions.
+
+## Verify
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m pytest tests -q
+```
+
+Checks cover every required layer's output shape, parameter count, gradient propagation, train/eval behavior, trained-checkpoint loading, actual image-upload responses, RGB conversion, invalid uploads, and the original text generation and embedding endpoints. See `results/VERIFICATION.md` for the checks actually performed on this delivery.
+
+## Files
+
+| File | Role |
 | --- | --- |
-| `word` | Query word with surrounding whitespace removed |
-| `model` | `en_core_web_lg`, as used in Module 2 |
-| `model_version` | `3.8.0`, the pinned pretrained model version |
-| `dimensions` | `300` |
-| `has_vector` | `true` for a successful result |
-| `embedding` | JSON array containing all 300 numeric vector values |
+| `app/cnn_model.py` | Specified CNN architecture |
+| `app/cnn_preprocessing.py` | Shared resize, tensor conversion, normalization, class order |
+| `app/cnn_service.py` | Load trained weights and run inference |
+| `app/cnn_api.py` | Router to add to the existing API |
+| `app/main.py` | Merged FastAPI entry point, retaining the earlier routes |
+| `app/bigram_model.py` and `app/embedding_model.py` | Original Assignment 1 implementations |
+| `train.py` | CIFAR-10 training, validation selection, final test evaluation |
+| `models/cifar10_cnn.pt` | Trained weights and preprocessing metadata |
+| `Dockerfile` | CPU inference deployment |
+| `pyproject.toml` and `uv.lock` | Updated UV dependency specification and lockfile |
+| `ARCHITECTURE.md` | Layer dimensions and parameter calculations |
+| `INTEGRATION.md` | Existing-API and GitHub instructions |
+| `Assignment2_Theory_LiuyangLi.pdf` | English worked answers to Questions 1-6 |
+| `THEORY_ANSWERS.md` | Editable source of the worked answers |
 
-The complete response captured from the real API is in `examples/apple_embedding.json`.
+## Submission
 
-The implementation uses the classroom operation `nlp(word).vector`; `.tolist()` serializes the NumPy vector as JSON. It loads the model once per server process and reuses it. Parsing and tagging components are excluded because this endpoint needs static word vectors. The unit tests compare its full output against the full classroom spaCy pipeline.
+The assignment rubric also requires a GitHub commit and a Docker deployment that works on the instructor's computer. Merge the CNN router into the existing course project, commit the code **and the trained checkpoint**, and include the repository link with your submission. Upload the theory PDF, or this project package if that is the required submission format. Code files alone do not establish that a GitHub commit or Docker run has happened.
 
-Input is one alphabetic word that spaCy tokenizes as one token. Surrounding whitespace is removed and case is preserved. Blank input, multiple words, numbers, punctuation, or words longer than 100 characters return HTTP 422. A word without a pretrained vector returns HTTP 404. An unavailable model returns HTTP 503 with installation instructions.
-
-### Text generation
-
-Use **POST /generate** with:
-
-```json
-{"start_word": "the", "length": 20}
-```
-
-The generator samples each next word from observed bigram probabilities in the Module 3 sample corpus. `length` includes the starting word and must be an integer from 1 to 200. The generator stops early when a word has no observed successor. Results may differ across calls because the next word is sampled randomly. An unknown starting word returns HTTP 404.
-
-Transitions are counted within each corpus text. For every word with observed successors, their probabilities sum to one.
-
-## Run locally with uv
-
-The project uses Python 3.12. From the project directory:
-
-```bash
-uv sync --locked
-uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-The first sync installs the vector model automatically. Keep the server terminal running and open <http://127.0.0.1:8000/docs>. Stop the server with Ctrl+C. From a second terminal, run the tests and live HTTP checks:
-
-```bash
-uv run pytest -q
-uv run python scripts/check_api.py --base-url http://127.0.0.1:8000
-```
-
-`requirements.txt` provides the runtime dependencies for a pip-based installation if uv is unavailable.
-
-## Project organization
-
-| Path | Responsibility |
-| --- | --- |
-| `app/main.py` | FastAPI endpoints, request/response schemas, and HTTP errors |
-| `app/embedding_model.py` | Cached spaCy model and complete word vector calculation |
-| `app/bigram_model.py` | Classroom bigram probabilities and text generation |
-| `pyproject.toml`, `uv.lock` | Dependency declarations and locked package versions |
-| `Dockerfile`, `compose.yaml` | Image build, model installation, server startup, and port mapping |
-| `scripts/check_api.py` | Live HTTP checks requiring only Python's standard library |
-| `tests/test_api.py` | Tests against real pretrained vectors and bigram behavior |
-| `examples/` | Responses captured from the running API |
-| `.github/workflows/docker-api.yml` | Automated Docker build and HTTP checks on GitHub |
-| `VALIDATION.md` | Recorded verification results and remaining deployment checks |
+References: the supplied Assignment2.pdf; https://www.cs.toronto.edu/~kriz/cifar.html; https://docs.pytorch.org/docs/stable/notes/modules.html; https://docs.pytorch.org/docs/stable/notes/autograd.html; https://pytorch.org/get-started/previous-versions/.

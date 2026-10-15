@@ -1,0 +1,1 @@
+"""CNN assignment application package."""
