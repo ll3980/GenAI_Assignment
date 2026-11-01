@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "verified_at_utc": "2026-10-14T18:59:16.522552+00:00",
+  "base_url": "http://127.0.0.1:8012",
+  "checks": [
+    "Trained CNN is ready",
+    "Swagger schema includes the CNN and original endpoints",
+    "Uploaded image returns a class and a valid ten-class probability distribution",
+    "Invalid images are rejected",
+    "Original text generation endpoint remains usable",
+    "Original GET and POST embeddings return identical complete pretrained vectors"
+  ],
+  "cnn_health": {
+    "status": "ready",
+    "architecture": "assignment2_cnn_64_v1",
+    "image_size": 64,
+    "checkpoint_epoch": 8
+  },
+  "prediction_response": {
+    "class_id": 5,
+    "class_name": "dog",
+    "confidence": 0.6958907842636108,
+    "probabilities": {
+      "airplane": 0.0005835012416355312,
+      "automobile": 2.6358327886555344e-05,
+      "bird": 0.013777329586446285,
+      "cat": 0.27151304483413696,
+      "deer": 0.012502654455602169,
+      "dog": 0.6958907842636108,
+      "frog": 0.0005421647219918668,
+      "horse": 0.0008360605570487678,
+      "ship": 0.0042751384899020195,
+      "truck": 5.296289236866869e-05
+    }
+  },
+  "generation_response": {
+    "generated_text": "the count of monte cristo is falsely imprisoned and later seeks revenge"
+  },
+  "embedding_model": "en_core_web_lg",
+  "embedding_dimensions": 300
+}

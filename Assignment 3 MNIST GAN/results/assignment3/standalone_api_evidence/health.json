@@ -1,0 +1,5 @@
+{
+  "status": "ready",
+  "model": "unconditional MNIST GAN",
+  "epoch": 10
+}

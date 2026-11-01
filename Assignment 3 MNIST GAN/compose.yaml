@@ -1,0 +1,12 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sps-genai-assignments:latest
+    platform: linux/amd64
+    init: true
+    ports:
+      - "${GAN_PORT:-8000}:80"
+    environment:
+      GAN_MODEL_PATH: /code/models/mnist_generator.pt

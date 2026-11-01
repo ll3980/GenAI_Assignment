@@ -1,0 +1,13 @@
+{
+  "epochs": 10,
+  "batch_size": 128,
+  "lr": 0.0002,
+  "seed": 42,
+  "device": "cpu",
+  "threads": 4,
+  "workers": 0,
+  "data_dir": "data",
+  "output_dir": "artifacts",
+  "device_used": "cpu",
+  "torch_version": "2.5.1+cpu"
+}
