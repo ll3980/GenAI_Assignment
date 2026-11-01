@@ -124,13 +124,3 @@ The included CNN is the original selected epoch 8 model. The GAN is the
 original final epoch 10 model trained on all 60,000 MNIST training images.
 Their records are preserved; integration does not claim new training or
 new accuracy measurements.
-
-## GitHub submission
-
-Continue using `ll3980/GenAI_Assignment`. Review the organized changes and
-commit/push the resulting branch. Git preserves directory structure, including
-hidden configuration files. Confirm that Docker runs on the target machine
-before submitting its deployment evidence.
-
-For the downloadable update patch and Git remote troubleshooting, follow
-[UPDATE_GITHUB.md](docs/UPDATE_GITHUB.md).
