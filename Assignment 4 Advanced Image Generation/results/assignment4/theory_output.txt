@@ -1,0 +1,42 @@
+{
+  "torch_version": "2.5.1+cpu",
+  "Q2": [
+    0.8414709848078965,
+    0.5403023058681398,
+    0.09983341664682815,
+    0.9950041652780258,
+    0.009999833334166664,
+    0.9999500004166653,
+    0.0009999998333333417,
+    0.9999995000000417
+  ],
+  "Q6a": [
+    7.0
+  ],
+  "Q6b_error": "element 0 of tensors does not require grad and does not have a grad_fn",
+  "Q6c_and_Q7c_default": false,
+  "Q7a": {
+    "x_grad": [
+      7.0
+    ],
+    "w_grad": null
+  },
+  "Q7b": {
+    "x_grad": [
+      7.0
+    ],
+    "w_grad": [
+      4.0,
+      2.0
+    ]
+  },
+  "Q8_original_error": "element 0 of tensors does not require grad and does not have a grad_fn",
+  "Q8_fixed": [
+    6.0
+  ],
+  "Q9": {
+    "first": 2.0,
+    "second": 5.0,
+    "after_reset": 3.0
+  }
+}

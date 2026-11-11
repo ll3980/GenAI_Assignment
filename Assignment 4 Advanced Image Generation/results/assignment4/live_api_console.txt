@@ -1,0 +1,77 @@
+{
+  "transport": "live HTTP",
+  "diffusion": {
+    "status": "passed",
+    "health": {
+      "status": "ready",
+      "model": "ddpm",
+      "dataset": "CIFAR-10",
+      "width": 32,
+      "height": 32,
+      "channels": 3,
+      "epoch": 3,
+      "training_steps": 1173,
+      "images_seen": 150000,
+      "conditional": false
+    },
+    "seed_reproducible": true,
+    "individual_image_size": [
+      32,
+      32
+    ],
+    "grid_size": [
+      128,
+      128
+    ]
+  },
+  "energy": {
+    "status": "passed",
+    "health": {
+      "status": "ready",
+      "model": "ebm",
+      "dataset": "CIFAR-10",
+      "width": 32,
+      "height": 32,
+      "channels": 3,
+      "epoch": 3,
+      "training_steps": 1173,
+      "images_seen": 150000,
+      "conditional": false
+    },
+    "seed_reproducible": true,
+    "individual_image_size": [
+      32,
+      32
+    ],
+    "grid_size": [
+      128,
+      128
+    ]
+  },
+  "/": {
+    "status": "passed"
+  },
+  "/health": {
+    "status": "passed"
+  },
+  "/cnn/health": {
+    "status": "passed"
+  },
+  "/gan/health": {
+    "status": "passed"
+  },
+  "/embedding?word=apple": {
+    "status": "passed"
+  },
+  "/generate": {
+    "status": "passed"
+  },
+  "/gan/generate": {
+    "status": "passed"
+  },
+  "/predict": {
+    "status": "passed",
+    "input": "synthetic RGB image"
+  }
+}
+Live Uvicorn HTTP validation completed; server shut down.

@@ -1,0 +1,32 @@
+[
+  {
+    "epoch": 1,
+    "steps": 391,
+    "images_seen": 50000,
+    "loss": -0.04005308905433863,
+    "complete_epoch": true,
+    "elapsed_seconds_this_run": 164.16973512600003,
+    "real_energy": -0.07475456906318664,
+    "negative_energy": -0.0206551680701226
+  },
+  {
+    "epoch": 2,
+    "steps": 782,
+    "images_seen": 100000,
+    "loss": -0.021111764937639235,
+    "complete_epoch": true,
+    "elapsed_seconds_this_run": 330.947213329,
+    "real_energy": -0.028406821148097516,
+    "negative_energy": 0.0058385202574729915
+  },
+  {
+    "epoch": 3,
+    "steps": 1173,
+    "images_seen": 150000,
+    "loss": -0.009237389134764672,
+    "complete_epoch": true,
+    "elapsed_seconds_this_run": 480.327913646,
+    "real_energy": -0.02169206687182188,
+    "negative_energy": -0.004141685236096382
+  }
+]

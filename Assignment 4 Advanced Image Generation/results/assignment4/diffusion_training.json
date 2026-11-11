@@ -1,0 +1,29 @@
+[
+  {
+    "epoch": 1,
+    "steps": 391,
+    "images_seen": 50000,
+    "loss": 0.5733314439201355,
+    "complete_epoch": true,
+    "elapsed_seconds_this_run": 125.35223431100007,
+    "noise_mse": 0.5733314439201355
+  },
+  {
+    "epoch": 2,
+    "steps": 782,
+    "images_seen": 100000,
+    "loss": 0.2565048995399475,
+    "complete_epoch": true,
+    "elapsed_seconds_this_run": 249.112035623,
+    "noise_mse": 0.2565048995399475
+  },
+  {
+    "epoch": 3,
+    "steps": 1173,
+    "images_seen": 150000,
+    "loss": 0.1884538327074051,
+    "complete_epoch": true,
+    "elapsed_seconds_this_run": 365.04381484,
+    "noise_mse": 0.1884538327074051
+  }
+]

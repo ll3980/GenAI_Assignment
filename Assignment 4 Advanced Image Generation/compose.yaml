@@ -1,0 +1,8 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sps-genai-assignment4:latest
+    ports:
+      - "8000:80"
