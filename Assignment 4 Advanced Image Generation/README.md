@@ -86,18 +86,4 @@ python -m training.train_energy --resume models/cifar10_energy.pt --base-channel
 
 The DDPM predicts Gaussian noise, minimizing pixel-averaged MSE. The cosine schedule has 200 steps and a near-zero terminal signal; reverse sampling uses every step and adds no noise at the final step. EMA weights are used for inference. The embedding convention matches the theoretical answers.
 
-During EBM sampling, weights are frozen while the image requires gradients. `autograd.grad` computes only image derivatives, and each update is detached before the next iteration. The subsequent contrastive training loss uses detached negatives to update weights: mean(E(real)) - mean(E(negative)) plus squared-energy regularization. A replay buffer uses 5% fresh-noise restarts. The sampler has finite steps, clipped gradients/pixels and small added noise; it is a synthesis approximation rather than exact equilibrium MCMC.
-
-## Submission status
-
-See `results/assignment4/VALIDATION.md` for checks actually completed. The preparation environment has no Docker runtime and no authenticated GitHub account. Docker execution and a remote push cannot be marked complete from local algorithm/API tests.
-
-After copying the project files into your local clone of https://github.com/ll3980/GenAI_Assignment , inspect `git status`, then commit and push:
-
-```bash
-git add app models training scripts tests docs notebooks main.py Dockerfile compose.yaml pyproject.toml uv.lock requirements.txt requirements-dev.txt README.md .gitignore .dockerignore .gitattributes results/assignment4
-git commit -m "Add CIFAR-10 diffusion and energy generators for Assignment 4"
-git push
-```
-
-Do not commit the dataset or virtual environment. Confirm that the new code and two checkpoints appear on GitHub, then run the Docker deployment and upload the requested submission to CourseWorks.
+During EBM sampling, weights are frozen while the image requires gradients. `autograd.grad` computes only image derivatives, and each update is detached before the next iteration. The subsequent contrastive training loss uses detached negatives to update weights: mean(E(real)) - mean(E(negative)) plus squared-energy regularization. A replay buffer uses 5% fresh-noise restarts. The sampler has finite steps, clipped gradients/pixels and small added noise; it is a synthesis approximation rather than exact equilibrium MCMC
